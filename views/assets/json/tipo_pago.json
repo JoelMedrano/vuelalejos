@@ -1,0 +1,14 @@
+[
+    {
+        "code": "C",
+        "description": "Crédito"
+    },
+    {
+        "code": "R",
+        "description": "Contado"
+    },
+    {
+        "code": "L",
+        "description": "Letras"
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "code": "0",
+        "description": "Sin documento"
+    },
+    {
+        "code": "1",
+        "description": "DNI"
+    },
+    {
+        "code": "4",
+        "description": "Carnet de extranjeria"
+    },
+    {
+        "code": "6",
+        "description": "RUC"
+    },
+    {
+        "code": "7",
+        "description": "Pasasporte"
+    },
+    {
+        "code": "A",
+        "description": "Cédula Diplomatica"
+    }
+]
