@@ -6,7 +6,7 @@ if (isset($_GET["start"]) && isset($_GET["end"])) {
     $between2 = $_GET["end"];
 } else {
 
-    $between1 = date("Y-m-d", strtotime("-29 day", strtotime(date("Y-m-d"))));
+    $between1 = date("Y-m-d", strtotime("-100000 day", strtotime(date("Y-m-d"))));
     $between2 = date("Y-m-d");
 }
 
@@ -34,7 +34,11 @@ if (isset($_GET["start"]) && isset($_GET["end"])) {
                 <div class="input-group">
                     <button type="button" class="btn float-right" id="daterange-btn">
                         <i class="far fa-calendar-alt mr-2"></i>
-                        <?php echo $between1 ?> - <?php echo $between2 ?>
+                        <?php if ($between1 < "2000") {
+                            echo "Start";
+                        } else {
+                            echo $between1;
+                        } ?> - <?php echo $between2 ?>
                         <i class="fas fa-caret-down ml-2"></i>
                     </button>
                 </div>
