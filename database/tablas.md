@@ -1,0 +1,4 @@
+# Tabla clients
+
+id_client,code_client,name_client,email_client,phone_client,pcreg_client,usreg_client
+pcmod_client,usmod_client,date_created_client,date_updated_client
