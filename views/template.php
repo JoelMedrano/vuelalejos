@@ -111,15 +111,7 @@ foreach ($routesArray as $key => $value) {
 
         <?php if (
             $routesArray[1] == "admins" ||
-            $routesArray[1] == "categories" ||
-            $routesArray[1] == "laboratories" ||
-            $routesArray[1] == "therapies" ||
-            $routesArray[1] == "substances" ||
-            $routesArray[1] == "articles" ||
-            $routesArray[1] == "providers" ||
-            $routesArray[1] == "purchases" ||
-            $routesArray[1] == "globalarticles"
-
+            $routesArray[1] == "preventives"
         ) : ?>
 
             <!-- DataTables  & Plugins -->
@@ -213,14 +205,7 @@ foreach ($routesArray as $key => $value) {
 
                     if (
                         $routesArray[1] == "admins" ||
-                        $routesArray[1] == "categories" ||
-                        $routesArray[1] == "laboratories" ||
-                        $routesArray[1] == "therapies" ||
-                        $routesArray[1] == "substances" ||
-                        $routesArray[1] == "articles" ||
-                        $routesArray[1] == "providers" ||
-                        $routesArray[1] == "purchases" ||
-                        $routesArray[1] == "globalarticles" ||
+                        $routesArray[1] == "preventives" ||
                         $routesArray[1] == "logout"
                     ) {
 

@@ -49,6 +49,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="preventives" class="nav-link <?php if (!empty($routesArray) && $routesArray[1] == "preventives") : ?>active<?php endif ?>">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                        <p>
+                            Preventivos
+                        </p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

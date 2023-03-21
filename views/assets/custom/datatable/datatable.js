@@ -41,6 +41,38 @@ function execDatatable(text) {
         page = "admins";
     }
 
+    /*=============================================
+    Validamos tabla de PREVENTIVOS
+    =============================================*/
+    if ($(".tablePreventives").length > 0) {
+        var url =
+            "ajax/preventives/data-preventives.php?text=" +
+            text +
+            "&between1=" +
+            $("#between1").val() +
+            "&between2=" +
+            $("#between2").val() +
+            "&token=" +
+            localStorage.getItem("token_user");
+        var columns = [
+            { data: "code_preventive" },
+            { data: "name_user" },
+            { data: "name_client" },
+            { data: "phone_client" },
+            { data: "origin_preventive" },
+            { data: "destination_preventive" },
+            { data: "price_preventive" },
+            { data: "date_created_preventive" },
+            { data: "actions", orderable: false, className: "text-center" },
+        ];
+        var order = [[1, "asc"]];
+        var aLengthMenu = [
+            [20, 50, 100, 500, 1000],
+            [20, 50, 100, 500, 1000],
+        ];
+        page = "preventives";
+    }
+
     adminsTable = $("#adminsTable").DataTable({
         responsive: true,
         lengthChange: true,
