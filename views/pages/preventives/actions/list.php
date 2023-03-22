@@ -61,7 +61,6 @@ if (isset($_GET["start"]) && isset($_GET["end"])) {
                     <th>Destino</th>
                     <th>Precio</th>
                     <th>Date</th>
-                    <th>Estado</th>
                     <th>Actions</th>
                 </tr>
             </thead>

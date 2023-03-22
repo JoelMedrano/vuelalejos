@@ -47,7 +47,7 @@ class AdminsController
                     localStorage.removeItem("rol_user");
                     localStorage.removeItem("company");
                     
-                    localStorage.setItem("token_user", "' . $response->results[0]->token_user . '");
+                    /* localStorage.setItem("token_user", "' . $response->results[0]->token_user . '"); */
                     localStorage.setItem("rol_user", "' . $response->results[0]->rol_user . '");
                     localStorage.setItem("company", "' . $response->results[0]->id_company_user . '");
 					window.location = "' . $_SERVER["REQUEST_URI"] . '"

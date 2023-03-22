@@ -236,6 +236,7 @@ foreach ($routesArray as $key => $value) {
     <?php endif ?>
 
     <script src="views/assets/custom/forms/forms.js"></script>
+
 </body>
 
 </html>

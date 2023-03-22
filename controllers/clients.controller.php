@@ -12,8 +12,8 @@ class ClientsController
 
                 echo '<script>
     
-                /* matPreloader("on");
-                fncSweetAlert("loading", "Loading...", ""); */
+                matPreloader("on");
+                fncSweetAlert("loading", "Loading...", "");
                 
                 </script>';
 
@@ -61,6 +61,28 @@ class ClientsController
                         $response = CurlController::request($url, $method, $fields);
 
                         $id_client = $response->results->lastId;
+
+                        $url = "correlatives?select=id_correlative,actual_correlative&linkTo=code_correlative&equalTo=cl";
+                        $method = "GET";
+                        $fields = array();
+
+                        $response = CurlController::request($url, $method, $fields);
+
+                        $code = $response->results[0];
+
+                        $id = $code->id_correlative;
+                        $avanzar = $code->actual_correlative + 1;
+
+                        if ($response->status == 200) {
+                            $data = "actual_correlative=" . $avanzar;
+
+                            //*Solicitud a la API
+                            $url = "correlatives?id=" . $id . "&nameId=id_correlative&token=" . $_SESSION["admin"]->token_user . "&table=users&suffix=user";
+                            $method = "PUT";
+                            $fields = $data;
+
+                            $responseCorrelative = CurlController::request($url, $method, $fields);
+                        }
                     } else {
                         $id_client = $_POST["id_client"];
                     }
@@ -81,8 +103,8 @@ class ClientsController
                         "hold_luggage_preventive"   => $_POST["hold_luggage_preventive"],
                         "price_preventive"          => $_POST["price_preventive"],
                         "services_preventive"       => trim(strtoupper($_POST["services_preventive"])),
-                        "pcreg_preventive"          =>  $pcreg_preventive,
-                        "usreg_preventive"          =>  $usreg_preventive,
+                        "pcreg_preventive"          => $pcreg_preventive,
+                        "usreg_preventive"          => $usreg_preventive,
                         "date_created_preventive"   => date("Y-m-d")
 
                     );
@@ -95,10 +117,48 @@ class ClientsController
                     $response = CurlController::request($url, $method, $fields);
 
                     $id_preventive = $response->results->lastId;
+
                     //*Respuesta de la API
                     if ($response->status == 200) {
 
                         $listaEscalas = json_decode($_POST["jsonLayovers"], true);
+
+                        foreach ($listaEscalas as $key => $value) {
+
+                            $formattedDateAirportDeparture = DateTime::createFromFormat('Y-m-d\TH:i', $value['dateAirportDeparture'])->format('Y-m-d H:i');
+                            $formattedDateAirportArrival = DateTime::createFromFormat('Y-m-d\TH:i', $value['dateAirportArrival'])->format('Y-m-d H:i');
+
+                            $dataEscala = array(
+
+                                "id_preventive_layover"         => $id_preventive,
+                                "type_layover"                  => strtoupper($value["typeLayover"]),
+                                "airline_layover"               => $value["airline"],
+                                "airport_departure_layover"     => $value["airportDeparture"],
+                                "date_departure_layover"        => $formattedDateAirportDeparture,
+                                "airport_arrival_layover"       => $value["airportArrival"],
+                                "date_arrival_layover"          => $formattedDateAirportArrival,
+                                "pcreg_layover"                 => $pcreg_preventive,
+                                "usreg_layover"                 => $usreg_preventive,
+                                "date_created_layover"          => date("Y-m-d")
+
+                            );
+
+                            //*Solicitud a la API
+                            $url = "layovers?token=" . $_SESSION["admin"]->token_user . "&table=users&suffix=user";
+                            $method = "POST";
+                            $fields = $dataEscala;
+
+                            $response = CurlController::request($url, $method, $fields);
+                        }
+
+                        echo '<script>
+
+                            fncFormatInputs();
+                            matPreloader("off");
+                            fncSweetAlert("close", "", "");
+                            fncSweetAlert("success", "Your records were created successfully", "/preventives");
+
+                        </script>';
                     } else {
                         echo '<script>
     

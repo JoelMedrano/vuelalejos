@@ -56,7 +56,7 @@ function execDatatable(text) {
             localStorage.getItem("token_user");
         var columns = [
             { data: "code_preventive" },
-            { data: "name_user" },
+            { data: "displayname_user" },
             { data: "name_client" },
             { data: "phone_client" },
             { data: "origin_preventive" },
