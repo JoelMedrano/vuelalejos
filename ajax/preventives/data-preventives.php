@@ -54,13 +54,17 @@ class DatatableController
 
                 if (preg_match('/^[0-9A-Za-zñÑáéíóú ]{1,}$/', $_POST['search']['value'])) {
 
-                    $linkTo = ["code_client", "name_client", "date_created_client"];
+                    $linkTo = ["displayname_user", "name_client"];
 
                     $search = str_replace(" ", "_", $_POST['search']['value']);
 
                     foreach ($linkTo as $key => $value) {
 
-                        $url = "categories?select=" . $select . "&linkTo=" . $value . "&search=" . $search . "&orderBy=" . $orderBy . "&orderMode=" . $orderType . "&startAt=" . $start . "&endAt=" . $length;
+                        $urlTotal = "relations?rel=preventives,users,clients&type=preventive,user,client&select=" . $select . "&linkTo=" . $value . "&search=" . $search . "&orderBy=" . $orderBy . "&orderMode=" . $orderType;
+
+                        $dataTotal = CurlController::request($urlTotal, $method, $fields)->results;
+
+                        $url = "relations?rel=preventives,users,clients&type=preventive,user,client&select=" . $select . "&linkTo=" . $value . "&search=" . $search . "&orderBy=" . $orderBy . "&orderMode=" . $orderType . "&startAt=" . $start . "&endAt=" . $length;
 
                         $data = CurlController::request($url, $method, $fields)->results;
 
@@ -71,7 +75,8 @@ class DatatableController
                         } else {
 
                             $data = $data;
-                            $recordsFiltered = count($data);
+                            $totalData = count($dataTotal);
+                            $recordsFiltered = count($dataTotal);
 
                             break;
                         }
@@ -123,41 +128,49 @@ class DatatableController
 
                 if ($_GET["text"] == "flat") {
 
+                    $origin_preventive = $value->origin_preventive;
+                    $destination_preventive = $value->destination_preventive;
                     $actions = "";
                 } else {
 
-                    $actions = "";
+                    //*Traemos datos de json
+                    $airportDeparture = file_get_contents("../../views/assets/json/airports.json");
+                    $airportDeparture = json_decode($airportDeparture, true);
+
+                    foreach ($airportDeparture as $key => $value1) {
+                        if ($value1["iata"] == $value->origin_preventive) {
+
+                            $origin_preventive = "<div>
+                            <p class='mb-0'><strong>IATA:   </strong>" . $value1["iata"] . "</p>
+                            <p class='mb-0'><strong>Nombre: </strong>" . $value1["name"] . "</p>
+                            <p class='mb-0'><strong>Ciudad: </strong>" . $value1["city"] . "</p>
+                            <p class='mb-0'><strong>Pais:   </strong>" . $value1["country"] . "</p>
+                        </div>";
+                        }
+
+                        if ($value1["iata"] == $value->destination_preventive) {
+                            $destination_preventive = "<div>
+                            <p class='mb-0'><strong>IATA:   </strong>" . $value1["iata"] . "</p>
+                            <p class='mb-0'><strong>Nombre: </strong>" . $value1["name"] . "</p>
+                            <p class='mb-0'><strong>Ciudad: </strong>" . $value1["city"] . "</p>
+                            <p class='mb-0'><strong>Pais:   </strong>" . $value1["country"] . "</p>
+                        </div>";
+                        }
+                    }
+
+                    $origin_preventive  =  TemplateController::htmlClean($origin_preventive);
+                    $destination_preventive  =  TemplateController::htmlClean($destination_preventive);
+
+                    $actions = "<a href='/preventives/edit/" . base64_encode($value->id_preventive . "~" . $_GET["token"]) . "' class='btn btn-warning btn-xs mr-1 rounded-circle'>
+
+                    <i class='fas fa-pencil-alt'></i>
+
+                </a>";
 
                     $actions = TemplateController::htmlClean($actions);
                 }
 
-                //*Traemos datos de json
-                $airportDeparture = file_get_contents("../../views/assets/json/airports.json");
-                $airportDeparture = json_decode($airportDeparture, true);
 
-                foreach ($airportDeparture as $key => $value1) {
-                    if ($value1["iata"] == $value->origin_preventive) {
-
-                        $origin_preventive = "<div>
-                            <p class='mb-0'><strong>IATA: </strong>" . $value1["iata"] . "</p>
-                            <p class='mb-0'><strong>Nombre: </strong>" . $value1["name"] . "</p>
-                            <p class='mb-0'><strong>Ciudad: </strong>" . $value1["city"] . "</p>
-                            <p class='mb-0'><strong>Pais: </strong>" . $value1["country"] . "</p>
-                        </div>";
-                    }
-
-                    if ($value1["iata"] == $value->destination_preventive) {
-                        $destination_preventive = "<div>
-                            <p class='mb-0'><strong>IATA: </strong>" . $value1["iata"] . "</p>
-                            <p class='mb-0'><strong>Nombre: </strong>" . $value1["name"] . "</p>
-                            <p class='mb-0'><strong>Ciudad: </strong>" . $value1["city"] . "</p>
-                            <p class='mb-0'><strong>Pais: </strong>" . $value1["country"] . "</p>
-                        </div>";
-                    }
-                }
-
-                $origin_preventive  =  TemplateController::htmlClean($origin_preventive);
-                $destination_preventive  =  TemplateController::htmlClean($destination_preventive);
 
                 $code_preventive = $value->code_preventive;
                 $displayname_user = $value->displayname_user;

@@ -1,0 +1,2 @@
+[22-Mar-2023 17:15:41 America/Lima] PHP Notice:  Undefined variable: purchase in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 20
+[22-Mar-2023 17:15:41 America/Lima] PHP Notice:  Trying to get property 'id_client_preventive' of non-object in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 20

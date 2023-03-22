@@ -105,6 +105,11 @@ foreach ($routesArray as $key => $value) {
             background-color: #77dd77 !important;
             color: black !important;
         }
+
+        table.dataTable tbody td {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+        }
     </style>
 
     <?php if (!empty($routesArray[1]) && !isset($routesArray[2])) : ?>

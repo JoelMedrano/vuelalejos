@@ -9,8 +9,8 @@ $(document).on("click", "#addLayoversIda, #addLayoversRetorno", function () {
                 "<!-- Aerolinea -->" +
                 '<div class="col-lg-2 form-group">' +
                 '<div class="input-group">' +
-                '<span class="input-group-addon"><button type="button" class="btn btn-danger btn-sm quitarOC"><i class="fa fa-times"></i></button></span>' +
-                '<select class="nuevoAerolinea form-control select2" name="airline_layover" id="airline_layover' +
+                '<span class="input-group-addon"><button type="button" class="btn btn-danger btn-sm quitarEscala"><i class="fa fa-times"></i></button></span>' +
+                '<select class="nuevoAerolinea form-control select2" idLayover="" name="airline_layover" id="airline_layover' +
                 contador +
                 '"' +
                 " required>" +
@@ -54,8 +54,8 @@ $(document).on("click", "#addLayoversIda, #addLayoversRetorno", function () {
                 "<!-- Aerolinea -->" +
                 '<div class="col-lg-2 form-group">' +
                 '<div class="input-group">' +
-                '<span class="input-group-addon"><button type="button" class="btn btn-danger btn-sm quitarOC"><i class="fa fa-times"></i></button></span>' +
-                '<select class="form-control select2 nuevoAerolinea" name="airline_layover" id="airline_layover' +
+                '<span class="input-group-addon"><button type="button" class="btn btn-danger btn-sm quitarEscala"><i class="fa fa-times"></i></button></span>' +
+                '<select class="form-control select2 nuevoAerolinea"  idLayover="" name="airline_layover" id="airline_layover' +
                 contador +
                 '"' +
                 " required>" +
@@ -265,4 +265,15 @@ $(".tableClientsModal").on("click", ".addClient", function () {
     });
 
     $("#clientModal").modal("hide");
+});
+
+//*quitar escala
+$(".formularioLayover").on("click", ".quitarEscala", function () {
+    $(this).parent().parent().parent().parent().remove();
+
+    if ($(".nuevoLayoverIda").children().length == 0) {
+        $("#jsonLayovers").val("");
+    } else {
+        listarOC();
+    }
 });

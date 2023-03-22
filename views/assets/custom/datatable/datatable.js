@@ -61,11 +61,11 @@ function execDatatable(text) {
             { data: "phone_client" },
             { data: "origin_preventive" },
             { data: "destination_preventive" },
-            { data: "price_preventive" },
-            { data: "date_created_preventive" },
+            { data: "price_preventive", className: "text-right" },
+            { data: "date_created_preventive", width: "100px" },
             { data: "actions", orderable: false, className: "text-center" },
         ];
-        var order = [[1, "asc"]];
+        var order = [[0, "desc"]];
         var aLengthMenu = [
             [20, 50, 100, 500, 1000],
             [20, 50, 100, 500, 1000],
@@ -169,12 +169,13 @@ function execDatatable(text) {
                     .appendTo("#adminsTable_wrapper .col-md-6:eq(0)");
             }, 100);
         });
-    } else {
+    } else if (text == "html") {
         setTimeout(function () {
-            adminsTable
-                .buttons()
-                .container()
-                .remove("#adminsTable_wrapper .col-md-6:eq(0)");
+            $(document).ready(function () {
+                // Ocultar los botones de la tabla
+                var buttonsContainer = adminsTable.buttons().container();
+                buttonsContainer.hide();
+            });
         }, 1000);
     }
 }
