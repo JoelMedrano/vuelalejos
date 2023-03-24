@@ -12,8 +12,8 @@ class ClientsController
 
                 echo '<script>
     
-                matPreloader("on");
-                fncSweetAlert("loading", "Loading...", "");
+                /* matPreloader("on");
+                fncSweetAlert("loading", "Loading...", ""); */
                 
                 </script>';
 
@@ -115,6 +115,9 @@ class ClientsController
                     $fields = $data;
 
                     $response = CurlController::request($url, $method, $fields);
+                    echo '<pre>';
+                    print_r($response);
+                    echo '</pre>';
 
                     $id_preventive = $response->results->lastId;
 
@@ -153,29 +156,29 @@ class ClientsController
 
                         echo '<script>
 
-                            fncFormatInputs();
+                            /* fncFormatInputs();
                             matPreloader("off");
                             fncSweetAlert("close", "", "");
-                            fncSweetAlert("success", "Your records were created successfully", "/preventives");
+                            fncSweetAlert("success", "Your records were created successfully", "/preventives"); */
 
                         </script>';
                     } else {
                         echo '<script>
     
-                            fncFormatInputs();
+                            /* fncFormatInputs();
                             matPreloader("off");
                             fncSweetAlert("close", "", "");
-                            fncNotie(3, "Error saving compra");
+                            fncNotie(3, "Error saving compra"); */
     
                         </script>';
                     }
                 } else {
                     echo '<script>
     
-                        fncFormatInputs();
+                        /* fncFormatInputs();
                         matPreloader("off");
                         fncSweetAlert("close", "", "");
-                        fncNotie(3, "Field syntax error");
+                        fncNotie(3, "Field syntax error"); */
 
                     </script>';
                 }
@@ -183,10 +186,10 @@ class ClientsController
 
                 echo '<script>
 
-					fncFormatInputs();
+					/* fncFormatInputs();
 					matPreloader("off");
 					fncSweetAlert("close", "", "");
-					fncNotie(3, "No se encontraron escalas");
+					fncNotie(3, "No se encontraron escalas"); */
 
 				</script>';
             }
