@@ -1,2 +1,13 @@
 [22-Mar-2023 17:15:41 America/Lima] PHP Notice:  Undefined variable: purchase in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 20
 [22-Mar-2023 17:15:41 America/Lima] PHP Notice:  Trying to get property 'id_client_preventive' of non-object in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 20
+[27-Mar-2023 17:04:01 America/Lima] PHP Notice:  Undefined index: description in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 41
+[27-Mar-2023 17:14:36 America/Lima] PHP Parse error:  syntax error, unexpected 'endforeach' (T_ENDFOREACH) in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 178
+[27-Mar-2023 17:20:19 America/Lima] PHP Notice:  Undefined property: stdClass::$hang_luggage_preventive in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 63
+[27-Mar-2023 17:33:36 America/Lima] PHP Fatal error:  Uncaught Error: Cannot use object of type stdClass as array in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php:417
+Stack trace:
+#0 C:\xampp\htdocs\vuelalejos\views\pages\preventives\preventives.php(42): include()
+#1 C:\xampp\htdocs\vuelalejos\views\template.php(213): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\vuelalejos\controllers\template.controller.php(9): include('C:\\xampp\\htdocs...')
+#3 C:\xampp\htdocs\vuelalejos\index.php(35): TemplateController->index()
+#4 {main}
+  thrown in C:\xampp\htdocs\vuelalejos\views\pages\preventives\actions\edit.php on line 417

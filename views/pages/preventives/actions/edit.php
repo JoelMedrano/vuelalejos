@@ -4,13 +4,14 @@ if (isset($routesArray[3])) {
     $security = explode("~", base64_decode($routesArray[3]));
     if ($security[1] == $_SESSION["admin"]->token_user) {
 
-        $select = $_ENV['SELECT_PREVENTIVE_TOTAL'];
+        $select = $_ENV['SELECT_PREVENTIVES_FULL'];
 
         $url = "preventives?select=" . $select . "&linkTo=id_preventive&equalTo=" . $security[0];
         $method = "GET";
         $fields = array();
 
         $response = CurlController::request($url, $method, $fields);
+
         if ($response->status == 200) {
 
             $preventive = $response->results[0];
@@ -27,6 +28,57 @@ if (isset($routesArray[3])) {
             $code_client = $client->code_client;
             $name_client = $client->name_client;
             $phone_client = $client->phone_client;
+
+            $origin_preventive = $preventive->origin_preventive;
+            $origin = "Seleccionar Aeropuerto origen";
+            if (!empty($origin_preventive)) {
+                $airport = file_get_contents("views/assets/json/airports.json");
+                $airport = json_decode($airport, true);
+
+                foreach ($airport as $key => $value) {
+                    if ($value["iata"] == $origin_preventive) {
+                        $origin = $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"];
+                        break; // Termina el bucle una vez que se encuentra el valor
+                    }
+                }
+            }
+
+            $destination_preventive = $preventive->destination_preventive;
+            $destination = "Seleccionar Aeropuerto origen";
+            if (!empty($destination_preventive)) {
+                $airport = file_get_contents("views/assets/json/airports.json");
+                $airport = json_decode($airport, true);
+
+                foreach ($airport as $key => $value) {
+                    if ($value["iata"] == $destination_preventive) {
+                        $destination = $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"];
+                        break; // Termina el bucle una vez que se encuentra el valor
+                    }
+                }
+            }
+
+            $adult_preventive = $preventive->adult_preventive;
+            $child_preventive = $preventive->child_preventive;
+            $baby_preventive = $preventive->baby_preventive;
+
+            $hand_luggage_preventive = $preventive->hand_luggage_preventive;
+            $hold_luggage_preventive = $preventive->hold_luggage_preventive;
+
+            $price_preventive = $preventive->price_preventive;
+            $services_preventive = $preventive->services_preventive;
+
+            $select = $_ENV['SELECT_LAYOVERS_FULL'];
+
+            $url = "layovers?select=" . $select . "&linkTo=id_preventive_layover&equalTo=" . $security[0];
+            $method = "GET";
+            $fields = array();
+
+            $response = CurlController::request($url, $method, $fields);
+
+            $layover = $response->results;
+            echo '<pre>';
+            print_r($layover);
+            echo '</pre>';
         } else {
 
             echo '<script>
@@ -96,7 +148,7 @@ if (isset($routesArray[3])) {
 
                         <label>Nombre Cliente</label>
 
-                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" onchange="validateJS(event,'regex')" name="name_client" id="name_client" value="<?php echo $name_client ?>" required autocomplete="off">
+                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" onchange="validateJS(event,'regex')" name="name_client" id="name_client" value="<?php echo $name_client ?>" required autocomplete="off" readonly>
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -110,7 +162,7 @@ if (isset($routesArray[3])) {
 
                         <label>Telefono Cliente</label>
 
-                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" onchange="validateJS(event,'phone')" name="phone_client" id="phone_client">
+                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" onchange="validateJS(event,'phone')" name="phone_client" value="<?php echo $phone_client ?>" id="phone_client" readonly>
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -133,11 +185,16 @@ if (isset($routesArray[3])) {
 
                         <select class="form-control select2" name="origin_preventive" id="origin_preventive" required>
 
-                            <option value>Seleccionar Aeropuerto Origen</option>
 
                             <?php foreach ($airport as $key => $value) : ?>
 
-                                <option value="<?php echo $value["iata"] ?>"><?php echo $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"] ?></option>
+                                <?php if ($value["iata"] == $origin_preventive) : ?>
+
+                                    <option value="<?php echo $origin_preventive ?>" selected><?php echo $origin  ?></option>
+                                <?php else : ?>
+
+                                    <option value="<?php echo $value["iata"] ?>"><?php echo $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"] ?></option>
+                                <?php endif ?>
 
                             <?php endforeach ?>
 
@@ -164,11 +221,15 @@ if (isset($routesArray[3])) {
 
                         <select class="form-control select2" name="destination_preventive" id="destination_preventive" required>
 
-                            <option value>Seleccionar Aeropuerto Destino</option>
-
                             <?php foreach ($airport as $key => $value) : ?>
 
-                                <option value="<?php echo $value["iata"] ?>"><?php echo $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"] ?></option>
+                                <?php if ($value["iata"] == $destination_preventive) : ?>
+
+                                    <option value="<?php echo $destination_preventive ?>" selected><?php echo $destination  ?></option>
+                                <?php else : ?>
+
+                                    <option value="<?php echo $value["iata"] ?>"><?php echo $value["iata"] . ' - ' . $value["name"] . ' - ' . $value["city"] . ' - ' . $value["country"] ?></option>
+                                <?php endif ?>
 
                             <?php endforeach ?>
 
@@ -186,7 +247,7 @@ if (isset($routesArray[3])) {
 
                         <label>Adultos</label>
 
-                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="adult_preventive" autocomplete="off">
+                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="adult_preventive" value="<?php echo $adult_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -200,7 +261,7 @@ if (isset($routesArray[3])) {
 
                         <label>Niños</label>
 
-                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="child_preventive" autocomplete="off">
+                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="child_preventive" value="<?php echo $child_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -214,7 +275,7 @@ if (isset($routesArray[3])) {
 
                         <label>Bebes</label>
 
-                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="baby_preventive" autocomplete="off">
+                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="baby_preventive" value="<?php echo $baby_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -228,7 +289,7 @@ if (isset($routesArray[3])) {
 
                         <label>Equipaje de mano</label>
 
-                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="hand_luggage_preventive" autocomplete="off">
+                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="hand_luggage_preventive" value="<?php echo $hand_luggage_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -242,7 +303,7 @@ if (isset($routesArray[3])) {
 
                         <label>Equipaje de bodega</label>
 
-                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="hold_luggage_preventive" autocomplete="off">
+                        <input type="number" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="hold_luggage_preventive" value="<?php echo $hold_luggage_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -256,7 +317,7 @@ if (isset($routesArray[3])) {
 
                         <label>Precio</label>
 
-                        <input type="number" step="any" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="price_preventive" autocomplete="off">
+                        <input type="number" step="any" class="form-control" pattern="[.\\,\\0-9]{1,}" onchange="validateJS(event,'numbers')" name="price_preventive" value="<?php echo $price_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -270,7 +331,7 @@ if (isset($routesArray[3])) {
 
                         <label>Servicios Adicionales</label>
 
-                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" name="services_preventive" autocomplete="off">
+                        <input type="text" class="form-control" pattern="[-\\(\\)\\=\\%\\&\\$\\;\\_\\*\\/\\#\\?\\¿\\!\\¡\\:\\,\\.\\0-9a-zA-ZñÑáéíóúüÁÉÍÓÚÜ ]{1,}" name="services_preventive" value="<?php echo $services_preventive ?>" autocomplete="off">
 
                         <div class="valid-feedback">Valid.</div>
                         <div class="invalid-feedback">Please fill out this field.</div>
@@ -307,7 +368,7 @@ if (isset($routesArray[3])) {
                 </div>
 
                 <!--=====================================
-                TITULOS
+                TITULOS IDA
                 ======================================-->
                 <div class="card card-primary card-outline">
 
@@ -348,14 +409,54 @@ if (isset($routesArray[3])) {
                 </div>
 
                 <!--=====================================
-                CUERPO
+                CUERPO IDA
                 ======================================-->
                 <div class="form-group nuevoLayoverIda">
+
+                    <?php foreach ($layover as $key => $value) : ?>
+                        <?php if ($value->type_layover == "IDA") : ?>
+                            <div class="row" id="contIda">
+                                <!-- Aerolinea -->
+                                <div class="col-lg-2 form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <button type="button" class="btn btn-danger btn-sm quitarEscala"><i class="fa fa-times"></i>
+                                            </button>
+                                        </span>
+                                        <select class="nuevoAerolinea form-control select2" idLayover="" name="airline_layover" id="airline_layover" required>
+                                            <option value>Seleccionar Aerolinea</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Aeropuerto Salida -->
+                                <div class="col-lg-3 ingresoAirPartida">
+                                    <select class="form-control select2 nuevoAirPartida" name="departure_layover" id="departure_layover" required>
+                                        <option value>Seleccionar Aeropuerto Partida</option>
+                                    </select>
+                                </div>
+                                <!-- Fecha Salida -->
+                                <div class="col-lg-2 form-group ingresoDatePartida">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDatePartida" name="date_departure_layover" id="date_departure_layover" tipo="">
+                                </div>
+                                <!-- Aeropuerto Llegada -->
+                                <div class="col-lg-3 ingresoAirLlegada">
+                                    <select class="form-control select2 nuevoAirLlegada" name="arrival_layover" id="arrival_layover" required>
+                                        <option value>Seleccionar Aeropuerto Partida</option>
+                                    </select>
+                                </div>
+                                <!-- Fecha Llegada -->
+                                <div class="col-lg-2 form-group ingresoDateLlegada">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDateLlegada" name="date_arrival_layover" id="date_arrival_layover">
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+
 
                 </div>
 
                 <!--=====================================
-                TITULOS
+                TITULOS RETORNO
                 ======================================-->
                 <div class="card card-danger card-outline">
 
@@ -395,6 +496,9 @@ if (isset($routesArray[3])) {
 
                 </div>
 
+                <!--=====================================
+                CUERPO RETORNO
+                ======================================-->
                 <div class="form-group nuevoLayoverRetorno">
 
                 </div>
