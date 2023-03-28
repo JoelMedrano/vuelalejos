@@ -162,10 +162,11 @@ class DatatableController
                     $destination_preventive  =  TemplateController::htmlClean($destination_preventive);
 
                     $actions = "<a href='/preventives/edit/" . base64_encode($value->id_preventive . "~" . $_GET["token"]) . "' class='btn btn-warning btn-xs mr-1 rounded-circle'>
-
-                    <i class='fas fa-pencil-alt'></i>
-
-                </a>";
+                                    <i class='fas fa-pencil-alt'></i>
+                                </a>
+                                <a href='/files/pdf/preventive.php?id=" . base64_encode($value->id_preventive) . "' class='btn btn-danger btn-xs mr-1 rounded-circle' target='_blank'>
+                                <i class='fas fa-file-pdf'></i>
+                                </a>";
 
                     $actions = TemplateController::htmlClean($actions);
                 }

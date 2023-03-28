@@ -507,9 +507,9 @@ if (isset($routesArray[3])) {
                                     <select class="form-control select2 nuevoAirLlegada form-control-sm" name="arrival_layover" id="arrival_layover" required>
                                         <?php foreach ($airport as $key => $valueE) : ?>
 
-                                            <?php if ($valueE["iata"] == $departure_layover) : ?>
+                                            <?php if ($valueE["iata"] == $arrival_layover) : ?>
 
-                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $arrival  ?></option>
+                                                <option value="<?php echo $arrival_layover ?>" selected><?php echo $arrival  ?></option>
                                             <?php else : ?>
 
                                                 <option value="<?php echo $valueE["iata"] ?>"><?php echo $valueE["iata"] . ' - ' . $valueE["name"] . ' - ' . $valueE["city"] . ' - ' . $valueE["country"] ?></option>
@@ -670,9 +670,9 @@ if (isset($routesArray[3])) {
                                     <select class="form-control select2 nuevoAirLlegada form-control-sm" name="arrival_layover" id="arrival_layover" required>
                                         <?php foreach ($airport as $key => $valueE) : ?>
 
-                                            <?php if ($valueE["iata"] == $departure_layover) : ?>
+                                            <?php if ($valueE["iata"] == $arrival_layover) : ?>
 
-                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $arrival  ?></option>
+                                                <option value="<?php echo $arrival_layover ?>" selected><?php echo $arrival  ?></option>
                                             <?php else : ?>
 
                                                 <option value="<?php echo $valueE["iata"] ?>"><?php echo $valueE["iata"] . ' - ' . $valueE["name"] . ' - ' . $valueE["city"] . ' - ' . $valueE["country"] ?></option>
@@ -717,68 +717,9 @@ if (isset($routesArray[3])) {
 
 </div>
 
-<!-- MODAL PRODUCCION -->
-<?php
-if (isset($_GET["start"]) && isset($_GET["end"])) {
-
-    $between1 = $_GET["start"];
-    $between2 = $_GET["end"];
-} else {
-
-    $between1 = date("Y-m-d", strtotime("-100000 day", strtotime(date("Y-m-d"))));
-    $between2 = date("Y-m-d");
-}
-?>
-<div class="modal fade" id="clientModal">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-
-            <form role="form" method="post">
-
-                <input type="hidden" id="between1" value="<?php echo $between1 ?>">
-                <input type="hidden" id="between2" value="<?php echo $between2 ?>">
-
-                <div class="modal-header">
-                    <h4 class="modal-title">Clientes</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="col-lg-12">
-                        <div class="card-body">
-                            <table id="adminsTable" class="table table-bordered table-striped tableClientsModal">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Nombre</th>
-                                        <th>Telefono</th>
-                                        <th>E-mail</th>
-                                        <th>Creacion</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
-                </div>
-
-            </form>
-        </div>
-    </div>
-</div>
-
 <script src="views/assets/custom/datatable/datatable.js"></script>
 <script src="views/pages/preventives/preventives.js"></script>
 
 <script>
-    window.document.title = "Preventivo - Nuevo"
+    window.document.title = "Preventivo - Editar"
 </script>

@@ -26,7 +26,7 @@ require_once "controllers/curl.controller.php";
 /*=============================================
 VENDOR
 =============================================*/
-require __DIR__ . '/vendor/autoload.php'; // Carga la biblioteca dotenv
+require __DIR__ . '/extensiones/vendor/autoload.php'; // Carga la biblioteca dotenv
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__); // Crea una nueva instancia de Dotenv
 $dotenv->load(); // Carga las variables de entorno desde el archivo .env

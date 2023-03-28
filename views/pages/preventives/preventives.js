@@ -222,6 +222,8 @@ function listarVuelos() {
     let dateAirportArrival = $(".nuevoDateLlegada");
 
     for (let i = 0; i < aerolinea.length; i++) {
+        var prueba = $(airportArrival[i]).val();
+
         listaVuelos.push({
             airline: $(aerolinea[i]).val(),
             airportDeparture: $(airportDeparture[i]).val(),
@@ -284,3 +286,10 @@ $(".formularioLayover").on(
         }
     }
 );
+
+document.querySelectorAll("input, select").forEach(function (el) {
+    el.addEventListener("change", function () {
+        // La función que quieres ejecutar cuando cambie algo en el formulario
+        listarVuelos();
+    });
+});

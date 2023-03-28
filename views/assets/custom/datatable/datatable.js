@@ -63,7 +63,12 @@ function execDatatable(text) {
             { data: "destination_preventive" },
             { data: "price_preventive", className: "text-right" },
             { data: "date_created_preventive", width: "100px" },
-            { data: "actions", orderable: false, className: "text-center" },
+            {
+                data: "actions",
+                orderable: false,
+                className: "text-center",
+                width: "100px",
+            },
         ];
         var order = [[0, "desc"]];
         var aLengthMenu = [

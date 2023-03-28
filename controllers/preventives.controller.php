@@ -88,7 +88,6 @@ class PreventivesController
                     }
 
                     //*ahora creamos la cabecera del preventivo
-
                     $data = array(
 
                         "code_preventive"           => trim(strtoupper($_POST["code_preventive"])),
@@ -156,29 +155,29 @@ class PreventivesController
 
                         echo '<script>
 
-                            /* fncFormatInputs();
+                            fncFormatInputs();
                             matPreloader("off");
                             fncSweetAlert("close", "", "");
-                            fncSweetAlert("success", "Your records were created successfully", "/preventives"); */
+                            fncSweetAlert("success", "Your records were created successfully", "/preventives");
 
                         </script>';
                     } else {
                         echo '<script>
     
-                            /* fncFormatInputs();
+                            fncFormatInputs();
                             matPreloader("off");
                             fncSweetAlert("close", "", "");
-                            fncNotie(3, "Error saving compra"); */
+                            fncNotie(3, "Error saving compra");
     
                         </script>';
                     }
                 } else {
                     echo '<script>
     
-                        /* fncFormatInputs();
+                        fncFormatInputs();
                         matPreloader("off");
                         fncSweetAlert("close", "", "");
-                        fncNotie(3, "Field syntax error"); */
+                        fncNotie(3, "Field syntax error");
 
                     </script>';
                 }
@@ -186,10 +185,10 @@ class PreventivesController
 
                 echo '<script>
 
-					/* fncFormatInputs();
+					fncFormatInputs();
 					matPreloader("off");
 					fncSweetAlert("close", "", "");
-					fncNotie(3, "No se encontraron escalas"); */
+					fncNotie(3, "No se encontraron escalas");
 
 				</script>';
             }
@@ -202,10 +201,14 @@ class PreventivesController
         if (isset($_POST["idPreventive"])) {
             echo '<script>
     
-                /* matPreloader("on");
-                fncSweetAlert("loading", "Loading...", ""); */
+                matPreloader("on");
+                fncSweetAlert("loading", "Loading...", "");
 
             </script>';
+
+            ob_flush();
+            flush();
+            sleep(2);
 
             if ($id == $_POST["idPreventive"]) {
 
@@ -216,9 +219,127 @@ class PreventivesController
                 $fields = array();
 
                 $response = CurlController::request($url, $method, $fields);
-                echo '<pre>';
-                print_r($response);
-                echo '</pre>';
+
+                if ($response->status == 200) {
+
+                    //*Agrupamos la información 
+                    $pcmod_preventive = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+                    $usmod_preventive = $_SESSION["admin"]->username_user;
+
+                    $data =
+
+                        "code_preventive="           . trim(strtoupper($_POST["code_preventive"])) .
+                        "&id_user_preventive="        . $_SESSION["admin"]->id_user .
+                        "&id_client_preventive="      . $_POST["id_client"] .
+                        "&origin_preventive="         . $_POST["origin_preventive"] .
+                        "&destination_preventive="    . $_POST["destination_preventive"] .
+                        "&adult_preventive="          . $_POST["adult_preventive"] .
+                        "&child_preventive="          . $_POST["child_preventive"] .
+                        "&baby_preventive="           . $_POST["baby_preventive"] .
+                        "&hand_luggage_preventive="   . $_POST["hand_luggage_preventive"] .
+                        "&hold_luggage_preventive="   . $_POST["hold_luggage_preventive"] .
+                        "&price_preventive="          . $_POST["price_preventive"] .
+                        "&services_preventive="       . trim(strtoupper($_POST["services_preventive"])) .
+                        "&pcmod_preventive="          . $pcmod_preventive .
+                        "&usmod_preventive="          . $usmod_preventive .
+                        "&date_created_preventive="   . date("Y-m-d");
+
+                    //*Solicitud a la API
+                    $url = "preventives?id=" . $id . "&nameId=id_preventive&token=" . $_SESSION["admin"]->token_user . "&table=users&suffix=user";
+                    $method = "PUT";
+                    $fields = $data;
+
+                    $response = CurlController::request($url, $method, $fields);
+
+                    if ($response->status == 200) {
+
+                        if (!empty($_POST["jsonLayovers"])) {
+
+                            $url = "layovers?id=" . $id . "&nameId=id_preventive_layover&token=" . $_SESSION["admin"]->token_user . "&table=users&suffix=user";
+                            $method = "DELETE";
+                            $fields = array();
+                            $response = CurlController::request($url, $method, $fields);
+
+                            $listaEscalas = json_decode($_POST["jsonLayovers"], true);
+
+                            foreach ($listaEscalas as $key => $value) {
+
+                                $formattedDateAirportDeparture = DateTime::createFromFormat('Y-m-d\TH:i', $value['dateAirportDeparture'])->format('Y-m-d H:i');
+                                $formattedDateAirportArrival = DateTime::createFromFormat('Y-m-d\TH:i', $value['dateAirportArrival'])->format('Y-m-d H:i');
+
+                                $dataEscala = array(
+
+                                    "id_preventive_layover"         => $id,
+                                    "type_layover"                  => strtoupper($value["typeLayover"]),
+                                    "airline_layover"               => $value["airline"],
+                                    "airport_departure_layover"     => $value["airportDeparture"],
+                                    "date_departure_layover"        => $formattedDateAirportDeparture,
+                                    "airport_arrival_layover"       => $value["airportArrival"],
+                                    "date_arrival_layover"          => $formattedDateAirportArrival,
+                                    "pcmod_layover"                 => $pcmod_preventive,
+                                    "usmod_layover"                 => $usmod_preventive,
+                                    "date_created_layover"          => date("Y-m-d")
+
+                                );
+
+                                //*Solicitud a la API
+                                $url = "layovers?token=" . $_SESSION["admin"]->token_user . "&table=users&suffix=user";
+                                $method = "POST";
+                                $fields = $dataEscala;
+
+                                $response = CurlController::request($url, $method, $fields);
+
+                                echo '<script>
+
+                                    fncFormatInputs();
+                                    matPreloader("off");
+                                    fncSweetAlert("close", "", "");
+                                    fncSweetAlert("success", "Your records were created successfully", "/preventives");
+        
+                                </script>';
+                            }
+                        } else {
+                            echo '<script>
+
+                                fncFormatInputs();
+                                matPreloader("off");
+                                fncSweetAlert("close", "", "");
+                                fncSweetAlert("success", "No se edito los detalles", "/purchases");
+        
+                            </script>';
+                        }
+                    } else {
+
+                        echo '<script>
+                    
+                            fncFormatInputs();
+                            matPreloader("off");
+                            fncSweetAlert("close", "", "");
+                            fncNotie(3, "Error editing the registry");
+
+                        </script>';
+                    }
+                } else {
+
+                    echo '<script>
+
+						fncFormatInputs();
+						matPreloader("off");
+						fncSweetAlert("close", "", "");
+						fncNotie(3, "Error editing the registry");
+
+					</script>';
+                }
+            } else {
+
+                echo '<script>
+
+					fncFormatInputs();
+					matPreloader("off");
+					fncSweetAlert("close", "", "");
+					fncNotie(3, "Error editing the registry");
+
+				</script>';
             }
         }
     }
