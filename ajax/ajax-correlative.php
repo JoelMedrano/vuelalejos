@@ -5,6 +5,8 @@ require_once "../controllers/curl.controller.php";
 class SelectController
 {
 
+    public $codigo;
+
     public function dataCorrelative()
     {
 

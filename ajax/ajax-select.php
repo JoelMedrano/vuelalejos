@@ -23,6 +23,15 @@ class SelectController
     }
 
 
+    public $rel;
+    public $type;
+    public $linkTo;
+    public $equalTo;
+    public $orderBy;
+    public $orderMode;
+    public $startAt;
+    public $endAt;
+
     public function dataSelectRel()
     {
 

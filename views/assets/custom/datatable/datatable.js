@@ -41,6 +41,72 @@ function execDatatable(text) {
         page = "admins";
     }
 
+    /*=============================================
+    Validamos tabla de PREVENTIVOS
+    =============================================*/
+    if ($(".tablePreventives").length > 0) {
+        var url =
+            "ajax/preventives/data-preventives.php?text=" +
+            text +
+            "&between1=" +
+            $("#between1").val() +
+            "&between2=" +
+            $("#between2").val() +
+            "&token=" +
+            localStorage.getItem("token_user");
+        var columns = [
+            { data: "code_preventive" },
+            { data: "displayname_user" },
+            { data: "name_client" },
+            { data: "phone_client" },
+            { data: "origin_preventive" },
+            { data: "destination_preventive" },
+            { data: "price_preventive", className: "text-right" },
+            { data: "date_created_preventive", width: "100px" },
+            {
+                data: "actions",
+                orderable: false,
+                className: "text-center",
+                width: "100px",
+            },
+        ];
+        var order = [[0, "desc"]];
+        var aLengthMenu = [
+            [20, 50, 100, 500, 1000],
+            [20, 50, 100, 500, 1000],
+        ];
+        page = "preventives";
+    }
+
+    /*=============================================
+    Validamos tabla de PREVENTIVOS
+    =============================================*/
+    if ($(".tableClientsModal").length > 0) {
+        var url =
+            "ajax/clients/data-clientsmodal.php?text=" +
+            text +
+            "&between1=" +
+            $("#between1").val() +
+            "&between2=" +
+            $("#between2").val() +
+            "&token=" +
+            localStorage.getItem("token_user");
+        var columns = [
+            { data: "code_client" },
+            { data: "name_client" },
+            { data: "phone_client" },
+            { data: "email_client" },
+            { data: "date_created_client" },
+            { data: "actions", orderable: false, className: "text-center" },
+        ];
+        var order = [[1, "asc"]];
+        var aLengthMenu = [
+            [20, 50, 100, 500, 1000],
+            [20, 50, 100, 500, 1000],
+        ];
+        page = "clients";
+    }
+
     adminsTable = $("#adminsTable").DataTable({
         responsive: true,
         lengthChange: true,
@@ -108,12 +174,13 @@ function execDatatable(text) {
                     .appendTo("#adminsTable_wrapper .col-md-6:eq(0)");
             }, 100);
         });
-    } else {
+    } else if (text == "html") {
         setTimeout(function () {
-            adminsTable
-                .buttons()
-                .container()
-                .remove("#adminsTable_wrapper .col-md-6:eq(0)");
+            $(document).ready(function () {
+                // Ocultar los botones de la tabla
+                var buttonsContainer = adminsTable.buttons().container();
+                buttonsContainer.hide();
+            });
         }, 1000);
     }
 }

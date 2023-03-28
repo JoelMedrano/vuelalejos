@@ -1,4 +1,5 @@
 <?php
+include 'funciones.php';
 session_start();
 
 /*=============================================
@@ -105,21 +106,18 @@ foreach ($routesArray as $key => $value) {
             background-color: #77dd77 !important;
             color: black !important;
         }
+
+        table.dataTable tbody td {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+        }
     </style>
 
     <?php if (!empty($routesArray[1]) && !isset($routesArray[2])) : ?>
 
         <?php if (
             $routesArray[1] == "admins" ||
-            $routesArray[1] == "categories" ||
-            $routesArray[1] == "laboratories" ||
-            $routesArray[1] == "therapies" ||
-            $routesArray[1] == "substances" ||
-            $routesArray[1] == "articles" ||
-            $routesArray[1] == "providers" ||
-            $routesArray[1] == "purchases" ||
-            $routesArray[1] == "globalarticles"
-
+            $routesArray[1] == "preventives"
         ) : ?>
 
             <!-- DataTables  & Plugins -->
@@ -147,11 +145,7 @@ foreach ($routesArray as $key => $value) {
 
     <?php elseif (
         isset($routesArray[2]) &&
-        (($routesArray[1] == "purchases" &&
-            ($routesArray[2] == "new" || $routesArray[2] == "edit")) ||
-            ($routesArray[1] == "articles" &&
-                ($routesArray[2] == "import" ||
-                    $routesArray[2] == "request")))
+        (($routesArray[1] == "preventives"))
     ) : ?>
 
         <!-- DataTables  & Plugins -->
@@ -183,6 +177,7 @@ foreach ($routesArray as $key => $value) {
 
 <body class="hold-transition sidebar-mini layout-fixed text-sm sidebar-collapse layout-navbar-fixed">
     <?php
+
     if (!isset($_SESSION["admin"])) {
 
         include "views/pages/login/login.php";
@@ -190,6 +185,8 @@ foreach ($routesArray as $key => $value) {
         echo '</body></head>';
 
         return;
+    } else {
+        miFuncion();
     }
     ?>
 
@@ -213,14 +210,7 @@ foreach ($routesArray as $key => $value) {
 
                     if (
                         $routesArray[1] == "admins" ||
-                        $routesArray[1] == "categories" ||
-                        $routesArray[1] == "laboratories" ||
-                        $routesArray[1] == "therapies" ||
-                        $routesArray[1] == "substances" ||
-                        $routesArray[1] == "articles" ||
-                        $routesArray[1] == "providers" ||
-                        $routesArray[1] == "purchases" ||
-                        $routesArray[1] == "globalarticles" ||
+                        $routesArray[1] == "preventives" ||
                         $routesArray[1] == "logout"
                     ) {
 
@@ -255,6 +245,7 @@ foreach ($routesArray as $key => $value) {
     <?php endif ?>
 
     <script src="views/assets/custom/forms/forms.js"></script>
+
 </body>
 
 </html>
