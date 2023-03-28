@@ -1,4 +1,5 @@
 <?php
+include 'funciones.php';
 session_start();
 
 /*=============================================
@@ -176,6 +177,7 @@ foreach ($routesArray as $key => $value) {
 
 <body class="hold-transition sidebar-mini layout-fixed text-sm sidebar-collapse layout-navbar-fixed">
     <?php
+
     if (!isset($_SESSION["admin"])) {
 
         include "views/pages/login/login.php";
@@ -183,6 +185,8 @@ foreach ($routesArray as $key => $value) {
         echo '</body></head>';
 
         return;
+    } else {
+        miFuncion();
     }
     ?>
 
