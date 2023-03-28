@@ -76,9 +76,6 @@ if (isset($routesArray[3])) {
             $response = CurlController::request($url, $method, $fields);
 
             $layover = $response->results;
-            echo '<pre>';
-            print_r($layover);
-            echo '</pre>';
         } else {
 
             echo '<script>
@@ -98,13 +95,15 @@ if (isset($routesArray[3])) {
 
     <form method="post" class="needs-validation formularioLayover" id="formularioLayover" novalidate enctype="multipart/form-data">
 
+        <input type="hidden" value="<?php echo $preventive->id_preventive ?>" name="idPreventive">
+
         <div class="card-header">
 
             <?php
-            /* require_once "controllers/clients.controller.php";
+            require_once "controllers/preventives.controller.php";
 
-            $create = new ClientsController();
-            $create->create(); */
+            $edit = new PreventivesController();
+            $edit->edit($preventive->id_preventive);
             ?>
 
             <div class="col-md-12 offset-md-0">
@@ -177,10 +176,8 @@ if (isset($routesArray[3])) {
                         <label>Aeropuerto de Origen</label>
 
                         <?php
-
                         $airport = file_get_contents("views/assets/json/airports.json");
                         $airport = json_decode($airport, true);
-
                         ?>
 
                         <select class="form-control select2" name="origin_preventive" id="origin_preventive" required>
@@ -420,38 +417,114 @@ if (isset($routesArray[3])) {
                                 <div class="col-lg-2 form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon">
-                                            <button type="button" class="btn btn-danger btn-sm quitarEscala"><i class="fa fa-times"></i>
+                                            <button type="button" class="btn btn-danger btn-sm quitarEscalaB"><i class="fa fa-times"></i>
                                             </button>
                                         </span>
-                                        <select class="nuevoAerolinea form-control select2" idLayover="" name="airline_layover" id="airline_layover" required>
-                                            <option value>Seleccionar Aerolinea</option>
+                                        <?php
+                                        $airline_layover = $value->airline_layover;
+                                        $airline = "Seleccionar Aerolinea";
+
+                                        if (!empty($airline_layover)) {
+                                            $airlines = file_get_contents("views/assets/json/airlines.json");
+                                            $airlines = json_decode($airlines, true);
+
+                                            foreach ($airlines as $key => $valueA) {
+                                                if ($valueA["code"] == $airline_layover) {
+                                                    $airline = $valueA["code"] . ' - ' . $valueA["name"];
+                                                    break; // Termina el bucle una vez que se encuentra el valor
+                                                }
+                                            }
+                                        }
+                                        ?>
+
+                                        <select class="nuevoAerolinea form-control select2 form-control-sm" idLayover="" name="airline_layover" id="airline_layover" required>
+                                            <?php foreach ($airlines as $key => $valueB) : ?>
+
+                                                <?php if ($valueB["code"] == $airline_layover) : ?>
+
+                                                    <option value="<?php echo $airline_layover ?>" selected><?php echo $airline  ?></option>
+                                                <?php else : ?>
+
+                                                    <option value="<?php echo $valueB["code"] ?>"><?php echo $valueB["code"] . ' - ' . $valueB["name"] ?></option>
+                                                <?php endif ?>
+
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
                                 <!-- Aeropuerto Salida -->
                                 <div class="col-lg-3 ingresoAirPartida">
-                                    <select class="form-control select2 nuevoAirPartida" name="departure_layover" id="departure_layover" required>
-                                        <option value>Seleccionar Aeropuerto Partida</option>
+                                    <?php
+                                    $departure_layover = $value->airport_departure_layover;
+                                    $departure = "Seleccionar Aeropuerto origen";
+                                    if (!empty($departure_layover)) {
+                                        $airport = file_get_contents("views/assets/json/airports.json");
+                                        $airport = json_decode($airport, true);
+
+                                        foreach ($airport as $key => $valueC) {
+                                            if ($valueC["iata"] == $departure_layover) {
+                                                $departure = $valueC["iata"] . ' - ' . $valueC["name"] . ' - ' . $valueC["city"] . ' - ' . $valueC["country"];
+                                                break; // Termina el bucle una vez que se encuentra el valor
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <select class="form-control select2 nuevoAirPartida form-control-sm" name="departure_layover" id="departure_layover" required>
+                                        <?php foreach ($airport as $key => $valueD) : ?>
+
+                                            <?php if ($valueD["iata"] == $departure_layover) : ?>
+
+                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $departure  ?></option>
+                                            <?php else : ?>
+
+                                                <option value="<?php echo $valueD["iata"] ?>"><?php echo $valueD["iata"] . ' - ' . $valueD["name"] . ' - ' . $valueD["city"] . ' - ' . $valueD["country"] ?></option>
+                                            <?php endif ?>
+
+                                        <?php endforeach ?>
                                     </select>
                                 </div>
                                 <!-- Fecha Salida -->
                                 <div class="col-lg-2 form-group ingresoDatePartida">
-                                    <input type="datetime-local" class="form-control form-control-sm nuevoDatePartida" name="date_departure_layover" id="date_departure_layover" tipo="">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDatePartida" name="date_departure_layover" id="date_departure_layover" tipo="<?php echo $value->type_layover ?>" value="<?php echo $value->date_departure_layover ?>">
                                 </div>
                                 <!-- Aeropuerto Llegada -->
                                 <div class="col-lg-3 ingresoAirLlegada">
-                                    <select class="form-control select2 nuevoAirLlegada" name="arrival_layover" id="arrival_layover" required>
-                                        <option value>Seleccionar Aeropuerto Partida</option>
+                                    <?php
+                                    $arrival_layover = $value->airport_arrival_layover;
+                                    $arrival = "Seleccionar Aeropuerto origen";
+                                    if (!empty($arrival_layover)) {
+                                        $airport = file_get_contents("views/assets/json/airports.json");
+                                        $airport = json_decode($airport, true);
+
+                                        foreach ($airport as $key => $valueC) {
+                                            if ($valueC["iata"] == $arrival_layover) {
+                                                $arrival = $valueC["iata"] . ' - ' . $valueC["name"] . ' - ' . $valueC["city"] . ' - ' . $valueC["country"];
+                                                break; // Termina el bucle una vez que se encuentra el valor
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <select class="form-control select2 nuevoAirLlegada form-control-sm" name="arrival_layover" id="arrival_layover" required>
+                                        <?php foreach ($airport as $key => $valueE) : ?>
+
+                                            <?php if ($valueE["iata"] == $departure_layover) : ?>
+
+                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $arrival  ?></option>
+                                            <?php else : ?>
+
+                                                <option value="<?php echo $valueE["iata"] ?>"><?php echo $valueE["iata"] . ' - ' . $valueE["name"] . ' - ' . $valueE["city"] . ' - ' . $valueE["country"] ?></option>
+                                            <?php endif ?>
+
+                                        <?php endforeach ?>
                                     </select>
                                 </div>
                                 <!-- Fecha Llegada -->
                                 <div class="col-lg-2 form-group ingresoDateLlegada">
-                                    <input type="datetime-local" class="form-control form-control-sm nuevoDateLlegada" name="date_arrival_layover" id="date_arrival_layover">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDateLlegada" name="date_arrival_layover" id="date_arrival_layover" value="<?php echo $value->date_arrival_layover ?>">
                                 </div>
                             </div>
                         <?php endif ?>
                     <?php endforeach ?>
-
 
                 </div>
 
@@ -500,7 +573,121 @@ if (isset($routesArray[3])) {
                 CUERPO RETORNO
                 ======================================-->
                 <div class="form-group nuevoLayoverRetorno">
+                    <?php foreach ($layover as $key => $value) : ?>
+                        <?php if ($value->type_layover == "RETORNO") : ?>
+                            <div class="row" id="contRetorno">
+                                <!-- Aerolinea -->
+                                <div class="col-lg-2 form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <button type="button" class="btn btn-danger btn-sm quitarEscalaB"><i class="fa fa-times"></i>
+                                            </button>
+                                        </span>
+                                        <?php
+                                        $airline_layover = $value->airline_layover;
+                                        $airline = "Seleccionar Aerolinea";
 
+                                        if (!empty($airline_layover)) {
+                                            $airlines = file_get_contents("views/assets/json/airlines.json");
+                                            $airlines = json_decode($airlines, true);
+
+                                            foreach ($airlines as $key => $valueA) {
+                                                if ($valueA["code"] == $airline_layover) {
+                                                    $airline = $valueA["code"] . ' - ' . $valueA["name"];
+                                                    break; // Termina el bucle una vez que se encuentra el valor
+                                                }
+                                            }
+                                        }
+                                        ?>
+
+                                        <select class="nuevoAerolinea form-control select2 form-control-sm" idLayover="" name="airline_layover" id="airline_layover" required>
+                                            <?php foreach ($airlines as $key => $valueB) : ?>
+
+                                                <?php if ($valueB["code"] == $airline_layover) : ?>
+
+                                                    <option value="<?php echo $airline_layover ?>" selected><?php echo $airline  ?></option>
+                                                <?php else : ?>
+
+                                                    <option value="<?php echo $valueB["code"] ?>"><?php echo $valueB["code"] . ' - ' . $valueB["name"] ?></option>
+                                                <?php endif ?>
+
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Aeropuerto Salida -->
+                                <div class="col-lg-3 ingresoAirPartida">
+                                    <?php
+                                    $departure_layover = $value->airport_departure_layover;
+                                    $departure = "Seleccionar Aeropuerto origen";
+                                    if (!empty($departure_layover)) {
+                                        $airport = file_get_contents("views/assets/json/airports.json");
+                                        $airport = json_decode($airport, true);
+
+                                        foreach ($airport as $key => $valueC) {
+                                            if ($valueC["iata"] == $departure_layover) {
+                                                $departure = $valueC["iata"] . ' - ' . $valueC["name"] . ' - ' . $valueC["city"] . ' - ' . $valueC["country"];
+                                                break; // Termina el bucle una vez que se encuentra el valor
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <select class="form-control select2 nuevoAirPartida form-control-sm" name="departure_layover" id="departure_layover" required>
+                                        <?php foreach ($airport as $key => $valueD) : ?>
+
+                                            <?php if ($valueD["iata"] == $departure_layover) : ?>
+
+                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $departure  ?></option>
+                                            <?php else : ?>
+
+                                                <option value="<?php echo $valueD["iata"] ?>"><?php echo $valueD["iata"] . ' - ' . $valueD["name"] . ' - ' . $valueD["city"] . ' - ' . $valueD["country"] ?></option>
+                                            <?php endif ?>
+
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                                <!-- Fecha Salida -->
+                                <div class="col-lg-2 form-group ingresoDatePartida">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDatePartida" name="date_departure_layover" id="date_departure_layover" tipo="<?php echo $value->type_layover ?>" value="<?php echo $value->date_departure_layover ?>">
+                                </div>
+                                <!-- Aeropuerto Llegada -->
+                                <div class="col-lg-3 ingresoAirLlegada">
+                                    <?php
+                                    $arrival_layover = $value->airport_arrival_layover;
+                                    $arrival = "Seleccionar Aeropuerto origen";
+                                    if (!empty($arrival_layover)) {
+                                        $airport = file_get_contents("views/assets/json/airports.json");
+                                        $airport = json_decode($airport, true);
+
+                                        foreach ($airport as $key => $valueC) {
+                                            if ($valueC["iata"] == $arrival_layover) {
+                                                $arrival = $valueC["iata"] . ' - ' . $valueC["name"] . ' - ' . $valueC["city"] . ' - ' . $valueC["country"];
+                                                break; // Termina el bucle una vez que se encuentra el valor
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <select class="form-control select2 nuevoAirLlegada form-control-sm" name="arrival_layover" id="arrival_layover" required>
+                                        <?php foreach ($airport as $key => $valueE) : ?>
+
+                                            <?php if ($valueE["iata"] == $departure_layover) : ?>
+
+                                                <option value="<?php echo $departure_layover ?>" selected><?php echo $arrival  ?></option>
+                                            <?php else : ?>
+
+                                                <option value="<?php echo $valueE["iata"] ?>"><?php echo $valueE["iata"] . ' - ' . $valueE["name"] . ' - ' . $valueE["city"] . ' - ' . $valueE["country"] ?></option>
+                                            <?php endif ?>
+
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                                <!-- Fecha Llegada -->
+                                <div class="col-lg-2 form-group ingresoDateLlegada">
+                                    <input type="datetime-local" class="form-control form-control-sm nuevoDateLlegada" name="date_arrival_layover" id="date_arrival_layover" value="<?php echo $value->date_arrival_layover ?>">
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
                 </div>
 
             </div>

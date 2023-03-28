@@ -268,12 +268,19 @@ $(".tableClientsModal").on("click", ".addClient", function () {
 });
 
 //*quitar escala
-$(".formularioLayover").on("click", ".quitarEscala", function () {
-    $(this).parent().parent().parent().parent().remove();
+$(".formularioLayover").on(
+    "click",
+    ".quitarEscala, .quitarEscalaB",
+    function () {
+        $(this).parent().parent().parent().parent().remove();
 
-    if ($(".nuevoLayoverIda").children().length == 0) {
-        $("#jsonLayovers").val("");
-    } else {
-        listarOC();
+        if (
+            $(".nuevoLayoverIda").children().length == 0 &&
+            $(".nuevoLayoverRetorno").children().length == 0
+        ) {
+            $("#jsonLayovers").val("");
+        } else {
+            listarVuelos();
+        }
     }
-});
+);

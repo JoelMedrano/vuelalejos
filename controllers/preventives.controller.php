@@ -1,6 +1,6 @@
 <?php
 
-class ClientsController
+class PreventivesController
 {
 
     //*Crear Preventivo
@@ -189,6 +189,33 @@ class ClientsController
 					fncNotie(3, "No se encontraron escalas");
 
 				</script>';
+            }
+        }
+    }
+
+    //*Editar Preventivo
+    public function edit($id)
+    {
+        if (isset($_POST["idPreventive"])) {
+            echo '<script>
+    
+                /* matPreloader("on");
+                fncSweetAlert("loading", "Loading...", ""); */
+
+            </script>';
+
+            if ($id == $_POST["idPreventive"]) {
+
+                $select = "id_preventive";
+
+                $url = "preventives?select=" . $select . "&linkTo=id_preventive&equalTo=" . $id;
+                $method = "GET";
+                $fields = array();
+
+                $response = CurlController::request($url, $method, $fields);
+                echo '<pre>';
+                print_r($response);
+                echo '</pre>';
             }
         }
     }

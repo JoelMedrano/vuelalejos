@@ -26,9 +26,9 @@ if ($response->status == 200) {
 
             <?php
 
-            require_once "controllers/clients.controller.php";
+            require_once "controllers/preventives.controller.php";
 
-            $create = new ClientsController();
+            $create = new PreventivesController();
             $create->create();
 
             ?>
