@@ -11,7 +11,7 @@ class CurlController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://apiadmin.vuelalejos.com/' . $url,
+            CURLOPT_URL => 'http://apimain.vuelalejos.com/' . $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
