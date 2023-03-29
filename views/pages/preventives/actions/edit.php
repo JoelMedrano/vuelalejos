@@ -4,7 +4,7 @@ if (isset($routesArray[3])) {
     $security = explode("~", base64_decode($routesArray[3]));
     if ($security[1] == $_SESSION["admin"]->token_user) {
 
-        $select = $_ENV['SELECT_PREVENTIVES_FULL'];
+        $select = "*";
 
         $url = "preventives?select=" . $select . "&linkTo=id_preventive&equalTo=" . $security[0];
         $method = "GET";
@@ -67,7 +67,7 @@ if (isset($routesArray[3])) {
             $price_preventive = $preventive->price_preventive;
             $services_preventive = $preventive->services_preventive;
 
-            $select = $_ENV['SELECT_LAYOVERS_FULL'];
+            $select = "*";
 
             $url = "layovers?select=" . $select . "&linkTo=id_preventive_layover&equalTo=" . $security[0];
             $method = "GET";
