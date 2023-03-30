@@ -20,7 +20,7 @@ function miFuncion()
         $fields = $data;
 
         $responseCorrelative = CurlController::request($url, $method, $fields);
-        if ($responseCorrelative->status == 303) {
+        if ($responseCorrelative->status == 303 || $responseCorrelative->status == 400) {
             session_destroy();
 
             echo '<script>
