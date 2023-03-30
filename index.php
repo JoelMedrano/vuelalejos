@@ -6,7 +6,7 @@ Mostrar errores
 date_default_timezone_set('America/Lima');
 ini_set('display_errors', 1);
 ini_set("log_errors", 1);
-ini_set("error_log",  "C:/xampp/htdocs/vuelalejos/php_error_log");
+ini_set("error_log",  "/public_html/php_error_log");
 
 /*=============================================
 CORS
