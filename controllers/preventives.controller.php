@@ -114,9 +114,6 @@ class PreventivesController
                     $fields = $data;
 
                     $response = CurlController::request($url, $method, $fields);
-                    echo '<pre>';
-                    print_r($response);
-                    echo '</pre>';
 
                     $id_preventive = $response->results->lastId;
 
